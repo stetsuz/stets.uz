@@ -1,0 +1,484 @@
+:root {
+  --bg: oklch(0.79 0.125 58);
+  --ink: oklch(0.22 0.02 50);
+  --ink-soft: oklch(0.3 0.035 50);
+  --cream: oklch(0.975 0.012 85);
+
+  /* Keycap plastics: top face, top face falloff, side wall, bottom edge */
+  --cream-top: oklch(0.975 0.012 85);
+  --cream-top-2: oklch(0.925 0.018 82);
+  --cream-side: oklch(0.87 0.024 78);
+  --cream-edge: oklch(0.72 0.04 68);
+  --dark-top: oklch(0.34 0.022 50);
+  --dark-top-2: oklch(0.27 0.02 50);
+  --dark-side: oklch(0.23 0.018 50);
+  --dark-edge: oklch(0.15 0.014 50);
+  --shadow: oklch(0.45 0.12 45 / 0.55);
+
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --gutter: clamp(20px, 5vw, 72px);
+
+  color-scheme: light;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: "Archivo", system-ui, sans-serif;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.page {
+  min-height: 100dvh;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: 1fr auto auto;
+  grid-template-areas: "stage" "ghost" "bottom";
+  gap: 56px;
+  padding: var(--gutter);
+}
+
+@media (min-width: 1200px) {
+  .page {
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-rows: 1fr auto;
+    grid-template-areas: "stage ghost" "bottom bottom";
+  }
+}
+
+.stage {
+  grid-area: stage;
+  align-self: center;
+}
+
+/* The three lines share one grid cell, so swapping them never moves the keys */
+
+.kicker {
+  display: grid;
+  align-items: end;
+  margin: 0 0 clamp(24px, 3.5vw, 40px);
+  font-size: clamp(1rem, 0.9rem + 0.5vw, 1.25rem);
+  font-weight: 600;
+  animation: fade 0.8s var(--ease-out) 0.1s both;
+}
+
+.kicker > span {
+  grid-area: 1 / 1;
+}
+
+.kicker__build,
+.kicker__done {
+  visibility: hidden;
+}
+
+/* Keys */
+
+.keys {
+  --size: clamp(76px, 22vw, 172px);
+
+  display: flex;
+  align-items: center;
+  gap: clamp(8px, 1.6vw, 22px);
+}
+
+.plus {
+  font-size: calc(var(--size) * 0.32);
+  font-weight: 500;
+  line-height: 1;
+  translate: 0 -8%;
+  animation: fade 0.6s var(--ease-out) 0.6s both;
+}
+
+.key {
+  --top: var(--cream-top);
+  --top-2: var(--cream-top-2);
+  --side: var(--cream-side);
+  --edge: var(--cream-edge);
+  --legend: var(--ink);
+  --lift: calc(var(--size) * 0.075);
+
+  position: relative;
+  flex: none;
+  width: calc(var(--size) * var(--u, 1));
+  height: var(--size);
+  border-radius: calc(var(--size) * 0.21);
+  background: var(--side);
+  box-shadow:
+    0 var(--lift) 0 var(--edge),
+    0 calc(var(--lift) * 2.2) calc(var(--lift) * 2.6) var(--shadow);
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    transform 0.16s var(--ease-out),
+    box-shadow 0.16s var(--ease-out);
+  animation: drop 0.9s var(--ease-out) both;
+  animation-delay: calc(0.15s + var(--i) * 0.14s);
+}
+
+.key--dark {
+  --top: var(--dark-top);
+  --top-2: var(--dark-top-2);
+  --side: var(--dark-side);
+  --edge: var(--dark-edge);
+  --legend: var(--cream);
+}
+
+.key input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.key__top {
+  position: absolute;
+  inset: calc(var(--size) * 0.05) calc(var(--size) * 0.1) calc(var(--size) * 0.16);
+  display: flex;
+  align-items: flex-end;
+  padding: 0 0 calc(var(--size) * 0.1) calc(var(--size) * 0.12);
+  border-radius: calc(var(--size) * 0.16);
+  background: radial-gradient(130% 100% at 50% 15%, var(--top) 40%, var(--top-2));
+  box-shadow: inset 0 1px 0 oklch(0.99 0.01 85 / 0.35);
+}
+
+.key__legend {
+  color: var(--legend);
+  font-size: calc(var(--size) * 0.15);
+  font-weight: 600;
+  font-stretch: 112%;
+  line-height: 1;
+}
+
+.key--dark .key__legend {
+  font-weight: 700;
+}
+
+@media (hover: hover) {
+  .key:hover {
+    transform: translateY(-2px);
+  }
+}
+
+.key:active {
+  transform: translateY(calc(var(--lift) * 0.8));
+}
+
+.key:has(input:checked) {
+  transform: translateY(var(--lift));
+  box-shadow:
+    0 0 0 var(--edge),
+    0 calc(var(--lift) * 0.6) var(--lift) var(--shadow);
+}
+
+.key:has(input:focus-visible) {
+  outline: 3px solid var(--ink);
+  outline-offset: 6px;
+}
+
+/* = ilovangiz */
+
+.result {
+  display: flex;
+  gap: 0.28em;
+  margin: clamp(32px, 4.5vw, 56px) 0 0;
+  font-size: clamp(2.6rem, 0.4rem + 11vw, 9rem);
+  font-weight: 800;
+  font-stretch: 112%;
+  line-height: 0.9;
+  letter-spacing: -0.03em;
+  animation: fade 0.9s var(--ease-out) 0.75s both;
+}
+
+.result__eq {
+  font-weight: 500;
+}
+
+.result__name {
+  padding-inline: 0.04em;
+  background: linear-gradient(var(--cream), var(--cream)) no-repeat 0 76% / 0% 22%;
+}
+
+/* The keyboard that types by itself: the AI key fires, the code keys follow */
+
+.ghost {
+  --size: clamp(52px, 14vw, 78px);
+  --cycle: 3.4s;
+  --start: 1.6s;
+
+  grid-area: ghost;
+  align-self: center;
+  justify-self: start;
+  display: grid;
+  grid-template-columns: repeat(4, var(--size));
+  gap: calc(var(--size) * 0.16);
+  rotate: -6deg;
+  animation: fade 1s var(--ease-out) 1.1s both;
+}
+
+@media (min-width: 1200px) {
+  .ghost {
+    --size: clamp(52px, 4.6vw, 78px);
+
+    justify-self: center;
+  }
+}
+
+.key--ghost {
+  --legend: var(--ink-soft);
+
+  width: auto;
+  cursor: default;
+  pointer-events: none;
+  animation: type var(--cycle) linear infinite;
+  animation-delay: calc(var(--start) + var(--t, 0s));
+}
+
+.key--ghost .key__top {
+  align-items: center;
+  justify-content: center;
+  gap: calc(var(--size) * 0.07);
+  padding: 0;
+}
+
+.key--ghost .key__legend {
+  font-size: calc(var(--size) * 0.26);
+}
+
+.key--idle {
+  animation: none;
+}
+
+.key--ai,
+.key--wide {
+  grid-column: span 2;
+}
+
+.key--ai {
+  --legend: var(--cream);
+}
+
+.key--ai .key__top {
+  overflow: hidden;
+}
+
+.key--ai .key__top::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 45%, oklch(0.8 0.15 58 / 0.6), transparent 70%);
+  opacity: 0;
+  animation: glow var(--cycle) linear var(--start) infinite;
+}
+
+.spark {
+  position: relative;
+  z-index: 1;
+  width: calc(var(--size) * 0.3);
+  fill: var(--cream);
+  animation: spin var(--cycle) var(--ease-out) var(--start) infinite;
+}
+
+.key--ai .key__legend {
+  position: relative;
+  z-index: 1;
+}
+
+/* Bottom row */
+
+.bottom {
+  grid-area: bottom;
+  display: grid;
+  gap: 16px;
+  align-items: end;
+  animation: fade 0.8s var(--ease-out) 0.9s both;
+}
+
+@media (min-width: 820px) {
+  .bottom {
+    grid-template-columns: 1fr minmax(0, 38ch);
+  }
+}
+
+.bottom p {
+  margin: 0;
+}
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+}
+
+.status::before {
+  content: "";
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--ink);
+  animation: pulse 2.2s var(--ease-out) 2s infinite;
+}
+
+.about {
+  color: var(--ink-soft);
+  font-size: 1.0625rem;
+  line-height: 1.55;
+}
+
+/* Both keys pressed: a build bar runs across the top, then the answer */
+
+.page::after {
+  content: "";
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 10;
+  height: 5px;
+  background: var(--ink);
+  transform: scaleX(0);
+  transform-origin: left;
+  pointer-events: none;
+}
+
+.page:has(#k-idea:checked):has(#k-stets:checked)::after {
+  animation: build 1.3s var(--ease-out) both;
+}
+
+.page:has(#k-idea:checked):has(#k-stets:checked) .kicker__idle {
+  visibility: hidden;
+}
+
+.page:has(#k-idea:checked):has(#k-stets:checked) .kicker__build {
+  animation: building 1.1s steps(1) both;
+}
+
+.page:has(#k-idea:checked):has(#k-stets:checked) .kicker__done {
+  visibility: visible;
+  animation: fade 0.6s var(--ease-out) 1.1s both;
+}
+
+.page:has(#k-idea:checked):has(#k-stets:checked) .result__name {
+  background-size: 100% 22%;
+  transition: background-size 0.7s var(--ease-out) 1.1s;
+}
+
+/* Motion */
+
+@keyframes drop {
+  from {
+    opacity: 0;
+    translate: 0 -48px;
+  }
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+    translate: 0 14px;
+  }
+}
+
+@keyframes build {
+  0% {
+    transform: scaleX(0);
+    opacity: 1;
+  }
+  80% {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scaleX(1);
+    opacity: 0;
+  }
+}
+
+@keyframes building {
+  0% {
+    visibility: visible;
+  }
+  100% {
+    visibility: hidden;
+  }
+}
+
+@keyframes type {
+  0%,
+  10%,
+  100% {
+    transform: translateY(0);
+    box-shadow:
+      0 var(--lift) 0 var(--edge),
+      0 calc(var(--lift) * 2.2) calc(var(--lift) * 2.6) var(--shadow);
+  }
+  3% {
+    transform: translateY(var(--lift));
+    box-shadow:
+      0 0 0 var(--edge),
+      0 calc(var(--lift) * 0.6) var(--lift) var(--shadow);
+  }
+}
+
+@keyframes glow {
+  0% {
+    opacity: 0;
+  }
+  4% {
+    opacity: 1;
+  }
+  45%,
+  100% {
+    opacity: 0;
+  }
+}
+
+/* A four-point star is symmetric at 90°, so the loop is seamless */
+@keyframes spin {
+  from {
+    rotate: 0deg;
+  }
+  20%,
+  to {
+    rotate: 90deg;
+  }
+}
+
+@keyframes pulse {
+  from {
+    box-shadow: 0 0 0 0 oklch(0.22 0.02 50 / 0.45);
+  }
+  to {
+    box-shadow: 0 0 0 10px oklch(0.22 0.02 50 / 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+  }
+}

@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="uz">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>stets.uz · Gʻoyangizdan ilova quramiz</title>
+  <meta name="description" content="stets.uz: gʻoyadan tayyor ilovagacha. Dizayn, dasturlash va ishga tushirish. Tez orada ochiladi.">
+  <meta name="theme-color" content="#f0a45f">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,400..800&display=swap">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="page">
+    <section class="stage" aria-labelledby="title">
+      <h1 class="sr-only" id="title">stets.uz: gʻoyangizdan ilova quramiz</h1>
+
+      <p class="kicker" aria-live="polite">
+        <span class="kicker__idle">Ikkala tugmani bosib koʻring.</span>
+        <span class="kicker__build">Ilova qurilmoqda…</span>
+        <span class="kicker__done">Tayyor. Siz gʻoya bilan keling, ilovani biz quramiz.</span>
+      </p>
+
+      <div class="keys" role="group" aria-label="Gʻoyangiz + stets.uz">
+        <label class="key" style="--u: 1.5; --i: 0">
+          <input type="checkbox" id="k-idea">
+          <span class="key__top"><span class="key__legend">Gʻoyangiz</span></span>
+        </label>
+        <span class="plus" aria-hidden="true">+</span>
+        <label class="key key--dark" style="--u: 2; --i: 1">
+          <input type="checkbox" id="k-stets">
+          <span class="key__top"><span class="key__legend">stets.uz</span></span>
+        </label>
+      </div>
+
+      <p class="result" aria-hidden="true">
+        <span class="result__eq">=</span>
+        <span class="result__name">ilovangiz</span>
+      </p>
+    </section>
+
+    <div class="ghost" aria-hidden="true">
+      <span class="key key--ghost" style="--t: 0.45s"><span class="key__top"><span class="key__legend">{</span></span></span>
+      <span class="key key--ghost" style="--t: 0.95s"><span class="key__top"><span class="key__legend">}</span></span></span>
+      <span class="key key--ghost" style="--t: 0.58s"><span class="key__top"><span class="key__legend">&lt;</span></span></span>
+      <span class="key key--ghost" style="--t: 0.82s"><span class="key__top"><span class="key__legend">/&gt;</span></span></span>
+
+      <span class="key key--ghost" style="--t: 0.3s"><span class="key__top"><span class="key__legend">(</span></span></span>
+      <span class="key key--ghost key--dark key--ai" style="--t: 0s">
+        <span class="key__top">
+          <svg class="spark" viewBox="0 0 24 24"><path d="M12 0C12 6.6 17.4 12 24 12 17.4 12 12 17.4 12 24 12 17.4 6.6 12 0 12 6.6 12 12 6.6 12 0Z"/></svg>
+          <span class="key__legend">AI</span>
+        </span>
+      </span>
+      <span class="key key--ghost" style="--t: 1.08s"><span class="key__top"><span class="key__legend">)</span></span></span>
+
+      <span class="key key--ghost key--idle"><span class="key__top"><span class="key__legend">fn</span></span></span>
+      <span class="key key--ghost key--wide" style="--t: 0.7s"><span class="key__top"></span></span>
+      <span class="key key--ghost" style="--t: 1.3s"><span class="key__top"><span class="key__legend">⏎</span></span></span>
+    </div>
+
+    <footer class="bottom">
+      <p class="status">Tez orada ochiladi</p>
+      <p class="about">Gʻoyadan tayyor ilovagacha: dizayn, dasturlash va ishga tushirish.</p>
+    </footer>
+  </main>
+</body>
+</html>
